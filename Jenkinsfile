@@ -12,7 +12,7 @@ pipeline {
                 sh '''
                     ls -la
                     npm --version
-                    npm --version
+                    npm install
                     npm ci
                     npm run build
                     ls -la
@@ -24,6 +24,7 @@ pipeline {
                 sh '''
                     echo "Test stage"
                     [ -f build/index.html ] && echo "File exists" || echo "File does not exist"
+                    npm test
                 '''
             }
         }
