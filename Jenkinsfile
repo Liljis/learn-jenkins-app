@@ -31,7 +31,7 @@ pipeline {
             steps{
                 sh '''
                     echo "Test stage"
-                    [ -f build/index.html ] && echo "File exists" || echo "File does not exist"
+                    # [ -f build/index.html ] && echo "File exists" || echo "File does not exist"
                     # sh 'test -f build/index.html'
 
                     npm test 
@@ -63,7 +63,7 @@ pipeline {
     
     post{
         always{
-            junit 'test-results/junit.xml'
+            junit 'jest-results/junit.xml'
         }
     }
 }
