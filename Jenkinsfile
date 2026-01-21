@@ -55,7 +55,7 @@ pipeline {
                     echo "started serve"
                     npm install -g serve
                     node_modules/.bin/serve -s build &
-                    sleep 10
+                    sleep 1
                     npx playwright test
                 '''
             }
