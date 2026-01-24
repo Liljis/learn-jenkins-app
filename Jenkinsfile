@@ -16,12 +16,11 @@ pipeline {
             }
             steps {
                 sh '''
-                    echo "install netlify cli"
                     npm install netlify-cli
-                    echo "success Netlify"
                     node_modules/.bin/netlify --version
-                    echo " Deploying to Netlify"
+                    echo " Deploying to Netlify ${NETLIFY_SITE_ID} "
                     node_modules/.bin/netlify status
+                    node_modules/.bin/netlify deploy --dir=build --prod
                 '''
             }
         }
