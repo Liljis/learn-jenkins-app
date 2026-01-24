@@ -1,70 +1,11 @@
 pipeline {
     agent any
+
+    environment {
+        NETLIFY_SITE_ID = 'f7e85c05-8a82-42bc-9a85-35036cdfa34f'
+    }
     stages {
-        /*
-        stage('Build') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh '''
-                    ls -la
-                    npm --version
-                    npm install
-                    npm ci
-                    npm run build
-                    ls -la
-                '''
-            }
-        }
-        */
-        stage ('Run Tests'){
-            parallel{
-                stage('Test'){
-                    agent {
-                        docker {
-                            image 'node:18-alpine'
-                            reuseNode true
-                        }
-                    }
-                    steps{
-                        sh '''
-                            echo "Test stage"
-                            # [ -f build/index.html ] && echo "File exists" || echo "File does not exist"
-                            # sh 'test -f build/index.html'
 
-                            npm test 
-                        '''
-                    }
-                }
-
-                stage('E2E'){
-                    agent {
-                        docker {
-                            image 'mcr.microsoft.com/playwright:v1.57.0-noble'
-                            reuseNode true
-                            // args '-u root:root' -  this will alter the jenkins user to root. which mess with the workspace.
-                            // create serve locally
-                            // run $npm install serve
-                            // copy path from node_modules/.bin/serve
-                        }
-                    }
-                    steps{
-                        sh '''
-                            echo "started serve"
-                            npm install serve
-                            node_modules/.bin/serve -s build &
-                            sleep 1
-                            npx playwright test --reporter=html
-                        '''
-                    }
-                }
-            }
-        }
-        
         stage('Deploy') {
             agent {
                 docker {
@@ -78,15 +19,9 @@ pipeline {
                     npm install netlify-cli
                     echo "success Netlify"
                     node_modules/.bin/netlify --version
+                    echo " Deploying to Netlify"
                 '''
             }
-        }
-    }
-    
-    post{
-        always{
-            junit 'jest-results/junit.xml'
-            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
         }
     }
 }
